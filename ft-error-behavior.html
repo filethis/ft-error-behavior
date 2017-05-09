@@ -1,34 +1,165 @@
-<link rel="import" href="../polymer/polymer.html">
-
-<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-
 <!--
-`ft-error-behavior`
-A behavior that provides error reporting.
+Copyright 2017 FileThis, Inc.
 
-@demo demo/index.html
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 -->
 
-<dom-module id="ft-error-behavior">
 
-    <style include="iron-flex iron-flex-alignment"></style>
+<link rel="import" href="../polymer/polymer.html">
 
-    <template>
+<script>
 
-        <div>
-            ft-error-behavior
-        </div>
+    /**
+     * `ft-error-behavior`
+     * A behavior that provides help for handling and reporting javascript errors.
+     * @demo demo/index.html
+     * @polymerBehavior FtErrorBehavior
+     */
 
-    </template>
+    FtErrorBehavior = {
 
-    <script>
-        Polymer({
+        properties: {
 
-            is: 'ft-error-behavior',
+            /** Set true if you want alert dialog windows to come up when errors occur. */
+             errorDebug: {
+                type: Boolean,
+                notify: true,
+                value: true
+            }
+        },
 
-            properties: {
+        ready: function()
+        {
+            window.addEventListener("error", this._onWindowError.bind(this));
+        },
+
+        _onWindowError: function(message, url, lineNumber, columnNumber, errorObject)
+        {
+            var messageArgumentType = typeof message;
+            if (messageArgumentType == "object")  // Eg. ErrorEvent
+            {
+                if (message.filename != null)
+                    url = message.filename;
+                if (message.lineno != null)
+                    lineNumber = message.lineno;
+                if (message.colno != null)
+                    columnNumber = message.colno;
+                if (message.message != null)
+                    message = message.message;
+            }
+            else if (messageArgumentType != "string")
+            {
+                // Stringify it, whatever it is...
+                message = message.toString();
             }
 
-        });
-    </script>
-</dom-module>
+            // When error occurs in a script loaded from another origin, we get a very limited message
+            var isCrossOriginError = (message.toLowerCase().indexOf("script error") > -1);
+            if (isCrossOriginError)
+            {
+                console.log("Error occurred in a script loaded from another domain.");
+                return false;
+            }
+
+            var error = this.createErrorFromValues(message, url, lineNumber, columnNumber, errorObject);
+
+            this.handleCaughtError(error);
+
+            return false;
+        },
+
+        /**
+         * Call this method with the caught error to write a nice message to the console and, if the debug mode is on,
+         * to pose a dialog with the same message.
+         *
+         * @param {Object} reason The error that was caught.
+         */
+        handleCaughtError: function(reason)
+        {
+            var message = this._createMessageFromError(reason);
+            console.log(message);
+            if (this.errorDebug)
+                alert(message);
+        },
+
+        _createMessageFromError: function(error)
+        {
+            // If the error is not an Error class instance, return a message that renders it as a string
+            var errorType = typeof error;
+            if (errorType !== 'object')
+                return "Error of type " + errorType + ": " + error.toString();
+
+            var message = "An error occurred";
+
+            // The standard properties
+            message = this._appendErrorPropertyTo(error, 'name', message);
+            message = this._appendErrorPropertyTo(error, 'message', message);
+
+            // File properties (can come from window.onerror() and XMLHttpRequest.onError())
+            message = this._appendErrorPropertyTo(error, 'filename', message);
+            message = this._appendErrorPropertyTo(error, 'url', message);
+            message = this._appendErrorPropertyTo(error, 'lineNumber', message);
+            message = this._appendErrorPropertyTo(error, 'columnNumber', message);
+
+            // System error properties
+            message = this._appendErrorPropertyTo(error, 'code', message);
+            message = this._appendErrorPropertyTo(error, 'errno', message);
+            message = this._appendErrorPropertyTo(error, 'syscall', message);
+            message = this._appendErrorPropertyTo(error, 'path', message);
+            message = this._appendErrorPropertyTo(error, 'port', message);
+
+            // Stacktrace, if we're lucky
+            // TODO: This just seems to be a copy of the "message" property...
+            //                message = this._appendErrorPropertyTo(error, 'stack', message);
+
+            return message;
+        },
+
+        _appendErrorPropertyTo: function(error, name, message)
+        {
+            if (!error.hasOwnProperty(name))
+                return message;
+
+            var value = error[name].toString();
+            return message + "\n\n" + name + ": " + value;
+        },
+
+        /**
+         * Call this method with the parameters you get from things like the XMLHttpRequest onerror() callback to turn
+         * it into a standard "Error" instance. Different browsers provide different data in different contexts,
+         * and any of the given parameters are allowed to have null values.
+         *
+         * @param {String} message The error message.
+         * @param {String} url The url of the error.
+         * @param {String} lineNumber The line number in the source code where the error occurred.
+         * @param {String} columnNumber The column number in the source code where the error occurred.
+         * @param {Object} errorObject The error object.
+         */
+        createErrorFromValues: function(message, url, lineNumber, columnNumber, errorObject)
+        {
+            var error = new Error();
+            if (message != null)
+                error.message = message;
+            if (url != null)
+                error.url = url;
+            if (lineNumber != null)
+                error.lineNumber = lineNumber;
+            if (columnNumber != null)
+                error.columnNumber = columnNumber;
+            if (errorObject != null)
+                error.errorObject = errorObject;
+            return error;
+        }
+    }
+
+</script>
