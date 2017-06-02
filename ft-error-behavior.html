@@ -33,7 +33,6 @@ limitations under the License.
             /** Set true if you want alert dialog windows to come up when errors occur. */
              errorDebug: {
                 type: Boolean,
-                notify: true,
                 value: true
             }
         },
@@ -46,18 +45,18 @@ limitations under the License.
         _onWindowError: function(message, url, lineNumber, columnNumber, errorObject)
         {
             var messageArgumentType = typeof message;
-            if (messageArgumentType == "object")  // Eg. ErrorEvent
+            if (messageArgumentType === "object")  // Eg. ErrorEvent
             {
-                if (message.filename != null)
+                if (message.filename !== null)
                     url = message.filename;
-                if (message.lineno != null)
+                if (message.lineno !== null)
                     lineNumber = message.lineno;
-                if (message.colno != null)
+                if (message.colno !== null)
                     columnNumber = message.colno;
-                if (message.message != null)
+                if (message.message !== null)
                     message = message.message;
             }
-            else if (messageArgumentType != "string")
+            else if (messageArgumentType !== "string")
             {
                 // Stringify it, whatever it is...
                 message = message.toString();
@@ -89,7 +88,10 @@ limitations under the License.
             var message = this._createMessageFromError(reason);
             console.log(message);
             if (this.errorDebug)
+            {
+//                debugger;
                 alert(message);
+            }
         },
 
         _createMessageFromError: function(error)
@@ -118,9 +120,8 @@ limitations under the License.
             message = this._appendErrorPropertyTo(error, 'path', message);
             message = this._appendErrorPropertyTo(error, 'port', message);
 
-            // Stacktrace, if we're lucky
-            // TODO: This just seems to be a copy of the "message" property...
-            //                message = this._appendErrorPropertyTo(error, 'stack', message);
+            // Stack property
+            message = this._appendErrorStackPropertyTo(error, message);
 
             return message;
         },
@@ -132,6 +133,26 @@ limitations under the License.
 
             var value = error[name].toString();
             return message + "\n\n" + name + ": " + value;
+        },
+
+        _appendErrorStackPropertyTo: function(error, message)
+        {
+            // It seems that sometimes the "stack" property just contains another copy of the "message" property.
+            // When it does, we ignore it.
+
+            if (!error.hasOwnProperty("stack"))
+                return message;
+
+            const stack  = error["stack"].toString();
+
+            if (error.hasOwnProperty("message"))
+            {
+                const originalMessage = error["message"].toString();
+                if (stack === originalMessage)
+                    return message;
+            }
+
+            return this._appendErrorPropertyTo(error, 'stack', message);
         },
 
         /**
