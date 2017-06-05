@@ -47,13 +47,13 @@ limitations under the License.
             var messageArgumentType = typeof message;
             if (messageArgumentType === "object")  // Eg. ErrorEvent
             {
-                if (message.filename !== null)
+                if (!!message.filename)
                     url = message.filename;
-                if (message.lineno !== null)
+                if (!!message.lineno)
                     lineNumber = message.lineno;
-                if (message.colno !== null)
+                if (!!message.colno)
                     columnNumber = message.colno;
-                if (message.message !== null)
+                if (!!message.message)
                     message = message.message;
             }
             else if (messageArgumentType !== "string")
@@ -169,15 +169,15 @@ limitations under the License.
         createErrorFromValues: function(message, url, lineNumber, columnNumber, errorObject)
         {
             var error = new Error();
-            if (message != null)
+            if (!!message)
                 error.message = message;
-            if (url != null)
+            if (!!url)
                 error.url = url;
-            if (lineNumber != null)
+            if (!!lineNumber)
                 error.lineNumber = lineNumber;
-            if (columnNumber != null)
+            if (!!columnNumber)
                 error.columnNumber = columnNumber;
-            if (errorObject != null)
+            if (!!errorObject)
                 error.errorObject = errorObject;
             return error;
         }
