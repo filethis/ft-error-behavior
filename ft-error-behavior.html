@@ -16,6 +16,16 @@ limitations under the License.
 
 
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../ft-confirmation-dialog/ft-confirmation-dialog.html">
+
+
+<template>
+
+    <!-- Confirmation dialog -->
+    <ft-confirmation-dialog id="confirmationDialog"></ft-confirmation-dialog>
+
+</template>
+
 
 <script>
 
@@ -88,10 +98,7 @@ limitations under the License.
             var message = this._createMessageFromError(reason);
             console.log(message);
             if (this.errorDebug)
-            {
-//                debugger;
-                alert(message);
-            }
+                this.$.confirmationDialog.alert(message);
         },
 
         _createMessageFromError: function(error)
@@ -101,24 +108,27 @@ limitations under the License.
             if (errorType !== 'object')
                 return "Error of type " + errorType + ": " + error.toString();
 
-            var message = "An error occurred";
+            var message = "An error occurred\n";
+            message +=    "-----------------\n\n";
+
+            message += "---------------------------------\n\n";
 
             // The standard properties
-            message = this._appendErrorPropertyTo(error, 'name', message);
-            message = this._appendErrorPropertyTo(error, 'message', message);
+            message = this._appendErrorPropertyTo(error, 'name', "Name", message);
+            message = this._appendErrorPropertyTo(error, 'message', "Message", message);
 
             // File properties (can come from window.onerror() and XMLHttpRequest.onError())
-            message = this._appendErrorPropertyTo(error, 'filename', message);
-            message = this._appendErrorPropertyTo(error, 'url', message);
-            message = this._appendErrorPropertyTo(error, 'lineNumber', message);
-            message = this._appendErrorPropertyTo(error, 'columnNumber', message);
+            message = this._appendErrorPropertyTo(error, 'filename', "Filename", message);
+            message = this._appendErrorInlineCodePropertyTo(error, 'url', "URL", message);
+            message = this._appendErrorPropertyTo(error, 'lineNumber', "Line", message);
+            message = this._appendErrorPropertyTo(error, 'columnNumber', "Column", message);
 
             // System error properties
-            message = this._appendErrorPropertyTo(error, 'code', message);
-            message = this._appendErrorPropertyTo(error, 'errno', message);
-            message = this._appendErrorPropertyTo(error, 'syscall', message);
-            message = this._appendErrorPropertyTo(error, 'path', message);
-            message = this._appendErrorPropertyTo(error, 'port', message);
+            message = this._appendErrorPropertyTo(error, 'code', "Code", message);
+            message = this._appendErrorPropertyTo(error, 'errno', "errno", message);
+            message = this._appendErrorPropertyTo(error, 'syscall', "syscall", message);
+            message = this._appendErrorInlineCodePropertyTo(error, 'path', "Path", message);
+            message = this._appendErrorPropertyTo(error, 'port', "Port", message);
 
             // Stack property
             message = this._appendErrorStackPropertyTo(error, message);
@@ -126,13 +136,22 @@ limitations under the License.
             return message;
         },
 
-        _appendErrorPropertyTo: function(error, name, message)
+        _appendErrorPropertyTo: function(error, name, label, message)
         {
             if (!error.hasOwnProperty(name))
                 return message;
 
             var value = error[name].toString();
-            return message + "\n\n" + name + ": " + value;
+            return message + "**" + label + "**: " + value + "\n\n";
+        },
+
+        _appendErrorInlineCodePropertyTo: function(error, name, label, message)
+        {
+            if (!error.hasOwnProperty(name))
+                return message;
+
+            var value = error[name].toString();
+            return message + "**" + label + "**: `" + value + "`\n\n";
         },
 
         _appendErrorStackPropertyTo: function(error, message)
@@ -152,7 +171,9 @@ limitations under the License.
                     return message;
             }
 
-            return this._appendErrorPropertyTo(error, 'stack', message);
+            message += "**Stacktrace**:\n\n```" + stack + "```";
+
+            return message;
         },
 
         /**
