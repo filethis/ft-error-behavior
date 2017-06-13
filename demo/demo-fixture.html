@@ -21,6 +21,12 @@ A behavior that provides error reporting.
 
     <template>
 
+        <style>
+            :host {
+                display:block;
+            }
+        </style>
+
         <!-- Bad Function Call -->
         <div class="layout vertical center">
             <paper-button raised on-click="_badFunctionCall">Bad Function Call</paper-button>
