@@ -98,7 +98,8 @@ limitations under the License.
             var message = this._createMessageFromError(reason);
             console.log(message);
             if (this.errorDebug)
-                this.$.confirmationDialog.alert(message);
+                alert(message);
+//                this.$.confirmationDialog.alert(message);
         },
 
         _createMessageFromError: function(error)
