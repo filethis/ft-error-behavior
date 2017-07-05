@@ -35,7 +35,6 @@ limitations under the License.
      * @demo demo/index.html
      * @polymerBehavior FtErrorBehavior
      */
-
     FtErrorBehavior = {
 
         properties: {
@@ -163,11 +162,11 @@ limitations under the License.
             if (!error.hasOwnProperty("stack"))
                 return message;
 
-            const stack  = error["stack"].toString();
+            var stack  = error["stack"].toString();
 
             if (error.hasOwnProperty("message"))
             {
-                const originalMessage = error["message"].toString();
+                var originalMessage = error["message"].toString();
                 if (stack === originalMessage)
                     return message;
             }
