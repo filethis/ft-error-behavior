@@ -2,4 +2,4 @@
 
 ### \<ft-error-behavior\>
 
-A behavior that provides error reporting.
+The behavior provides support for error handling and reporting.
