@@ -4,7 +4,7 @@
   "main": "ft-error-behavior.html",
   "dependencies": {
     "ft-confirmation-dialog": "filethis/ft-confirmation-dialog#^0.0.15",
-    "ft-element-demo": "filethis/ft-element-demo#^0.0.3",
+    "ft-element-demo": "filethis/ft-element-demo#^0.0.4",
     "marked-element": "PolymerElements/marked-element#1 - 2",
     "polymer": "Polymer/polymer#1.9 - 2"
   },
