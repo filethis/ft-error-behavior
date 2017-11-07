@@ -1,6 +1,6 @@
 # Project configuration
 NAME=ft-error-behavior
-VERSION=0.0.15
+VERSION=0.0.16
 LOCAL_PORT=3647
 GITHUB_USER=filethis
 GITHUB_USER_ABBREV=ft
