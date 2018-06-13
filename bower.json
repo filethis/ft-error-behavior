@@ -3,8 +3,8 @@
   "description": "A behavior that provides error reporting.",
   "main": "ft-error-behavior.html",
   "dependencies": {
-    "ft-confirmation-dialog": "filethis/ft-confirmation-dialog#^1.0.21",
-    "ft-element-demo": "filethis/ft-element-demo#^1.0.12",
+    "ft-confirmation-dialog": "filethis/ft-confirmation-dialog#^1.0.22",
+    "ft-element-demo": "filethis/ft-element-demo#^1.0.13",
     "marked-element": "PolymerElements/marked-element#1 - 2",
     "polymer": "Polymer/polymer#1.9 - 2"
   },
