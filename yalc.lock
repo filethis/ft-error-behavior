@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "packages": {
+    "ft-confirmation-dialog": {
+      "signature": "67e8a0df66a69ab6b858b258ced2a11c",
+      "file": true
+    },
+    "ft-element-demo": {
+      "signature": "b246107b96990bfddd35a67af1d387b5",
+      "file": true
+    }
+  }
+}
