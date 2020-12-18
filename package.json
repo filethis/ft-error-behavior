@@ -8,6 +8,24 @@
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
   },
+  "files": [
+    "*.html",
+    "*.js",
+    "*.make",
+    "*.png",
+    "*.svg",
+    ".yalc/",
+    "data/",
+    "demo/",
+    "test/",
+    ".babelrc",
+    ".eslintrc.json",
+    ".gitignore",
+    "LICENSE",
+    "Makefile",
+    "manifest.json",
+    "polymer.json"
+  ],
   "main": "ft-error-behavior.js",
   "dependencies": {
     "@polymer/marked-element": "^3.0.0",
