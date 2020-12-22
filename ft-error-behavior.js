@@ -18,7 +18,7 @@ limitations under the License.
   from HTML and may be out of place here. Review them and
   then delete this comment!
 */
-import 'ft-confirmation-dialog/ft-confirmation-dialog.js';
+import '@filethis/ft-confirmation-dialog/ft-confirmation-dialog.js';
 
 import '@polymer/polymer/polymer-legacy.js';
 const $_documentContainer = document.createElement('template');

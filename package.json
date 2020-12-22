@@ -1,6 +1,6 @@
 {
   "description": "A behavior that provides error reporting.",
-  "name": "ft-error-behavior",
+  "name": "@filethis/ft-error-behavior",
   "version": "1.0.22",
   "resolutions": {
     "inherits": "2.0.3",
@@ -14,7 +14,6 @@
     "*.make",
     "*.png",
     "*.svg",
-    ".yalc/",
     "data/",
     "demo/",
     "test/",
@@ -31,8 +30,8 @@
     "@polymer/marked-element": "^3.0.0",
     "@polymer/paper-button": "^3.0.0",
     "@polymer/polymer": "^3.0.0",
-    "ft-confirmation-dialog": "file:.yalc/ft-confirmation-dialog",
-    "ft-element-demo": "file:.yalc/ft-element-demo"
+    "@filethis/ft-confirmation-dialog": "^1.0.24",
+    "@filethis/ft-element-demo": "^1.0.15"
   },
   "devDependencies": {
     "@polymer/iron-component-page": "^4.0.0",
