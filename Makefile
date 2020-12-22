@@ -1,7 +1,7 @@
 # Project configuration
 NAME=ft-error-behavior
 SRC_DIR=
-VERSION=1.0.22
+VERSION=3.0.0
 LOCAL_PORT=3647
 GITHUB_USER=filethis
 GITHUB_USER_ABBREV=ft
